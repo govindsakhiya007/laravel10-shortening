@@ -1,0 +1,34 @@
+/* Preview logo set */
+#remove_pro_pic {
+	position: absolute;
+	color: #fff;
+	border: 4px solid #ffffff;
+	bottom: 10px;
+	right: 15px;
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	cursor: pointer;
+	transition: all 0.3s ease;
+	font-size: 14px;
+	background: var(--primary-bg-color);
+}
+.cross {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.was-validated .form-control:invalid, .form-control.is-invalid, input.form-control.parsley-error, textarea.form-control.parsley-error{
+    background-image: none;
+}
+
+.custom-switch .custom-control-label::after {
+    top: calc(0.1rem + 0px);
+   
+}
+
+.custom-switch-indicator:before {
+    top: 2px;
+    
+}
