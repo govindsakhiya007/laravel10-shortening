@@ -11,10 +11,12 @@ return new class extends Migration
 		if (!Schema::hasTable('users')) {
 			Schema::create('users', function (Blueprint $table) {
 				$table->id();
-				$table->string('name');
-				$table->string('email')->unique();
-				$table->timestamp('email_verified_at')->nullable();
+				$table->text('name');
+				$table->text('email'); // Encrypted email
+				$table->string('email_hash')->unique(); // Hashed email for unique validation
 				$table->string('password');
+				$table->unsignedTinyInteger('role')->default(2)->comment("0=Admin,1=Organizer,2=Attendee"); // Default to attendee
+				$table->timestamp('email_verified_at')->nullable();
 				$table->rememberToken();
 				$table->timestamps();
 			});

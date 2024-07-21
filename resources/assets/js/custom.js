@@ -760,3 +760,31 @@ function removeForTransparent(){
 		document.querySelector('body').classList.remove('gradient-menu')
 	}
 }
+
+// --
+// Show toaster for error/success message
+function showToast(message, type) {
+	var toastMessage = document.getElementById('toast-message');
+	var toastElement = document.getElementById('toast-urls');
+
+	// Reset classes
+	toastMessage.className = 'toast-body text-white p-3';
+
+	if (type === 'success') {
+		toastMessage.classList.add('bg-primary');
+	} else if (type === 'error') {
+		toastMessage.classList.add('bg-secondary');
+	}
+
+	// Set the message
+	toastMessage.innerText = message;
+
+	// Show the toast
+	var toast = new bootstrap.Toast(toastElement);
+	toast.show();
+
+	// Hide the toast after 5 seconds
+	setTimeout(function(){
+		toast.hide();
+	}, 5000);
+}

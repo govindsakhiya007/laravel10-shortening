@@ -24,9 +24,14 @@
 <script src="{{ URL::asset('resources/assets/js/circle-progress.min.js') }}"></script>
 <!-- Internal Data tables -->
 <script src="{{ URL::asset('resources/assets/plugins/datatable/js/jquery.dataTables.min.js') }}"></script>
-<script src="{{ URL::asset('resources/assets/plugins/datatable/js/dataTables.bootstrap5.js') }}"></script>
+<script src="{{ URL::asset('resources/assets/plugins/datatable/js/dataTables.bootstrap5.min.js') }}"></script>
 <script src="{{ URL::asset('resources/assets/plugins/datatable/dataTables.responsive.min.js') }}"></script>
 <script src="{{ URL::asset('resources/assets/plugins/datatable/responsive.bootstrap5.min.js') }}"></script>
+
+<script src="{{ URL::asset('resources/assets/plugins/datatable/js/dataTables.buttons.min.js') }}"></script>
+<script src="{{ URL::asset('resources/assets/plugins/datatable/js/jszip.min.js') }}"></script>
+<script src="{{ URL::asset('resources/assets/plugins/datatable/js/buttons.bootstrap5.min.js') }}"></script>
+<script src="{{ URL::asset('resources/assets/plugins/datatable/js/buttons.html5.min.js') }}"></script>
 <!--Internal  Sweet-Alert js-->
 <script src="{{ URL::asset('resources/assets/plugins/sweet-alert/sweetalert.min.js') }}"></script>
 <script src="{{ URL::asset('resources/assets/plugins/sweet-alert/jquery.sweet-alert.js') }}"></script>
@@ -34,6 +39,9 @@
 <script src="{{ URL::asset('resources/assets/js/themecolor.js') }}"></script>
 <!-- custom js -->
 <script src="{{ URL::asset('resources/assets/js/custom.js') }}"></script>
+
+@vite('resources/assets/js/app.js')
+
 <!-- Header Token -->
 <script type="text/javascript">
 	$.ajaxSetup({

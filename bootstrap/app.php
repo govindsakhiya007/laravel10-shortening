@@ -11,8 +11,9 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        // $middleware->alias([
-        // ]);
+        $middleware->alias([
+            'check.event.role' => \App\Http\Middleware\CheckOrganizerRole::class
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

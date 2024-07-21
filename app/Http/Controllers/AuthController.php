@@ -5,10 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Crypt;
 
 use App\Models\User;
 
@@ -31,45 +30,32 @@ class AuthController extends Controller
     {
         // --
 		// Define validation rules
-        $rules = [
+        $request->validate([
             'name' => 'required|string|min:8|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed'
-        ];
-        
-        // --
-		// Define custom validation messages
-        $messages = [
-            'name.required' => Lang::get('validations.login_form.name.required'),
-            'name.min' => Lang::get('validations.login_form.minlength.required'),
-            'name.max' => Lang::get('validations.login_form.maxlength.required'),
-            'email.required' => Lang::get('validations.email_required'),
-            'email.email' => Lang::get('validations.email_email'),
-            'password.required' => Lang::get('validations.password_required'),
-            'password.min' => Lang::get('validations.password_minlength'),
-            'password_confirmation.same' => Lang::get('validations.password_confirm')
-        ];
-        
-        // --
-		// Validate the request
-        $validator = Validator::make($request->all(), $rules, $messages);
-        if ($validator->fails()) {
-            return redirect()->back()
-                ->withErrors($validator)
-                ->withInput();
-        }
-
-        // --
-		// Create a new user
-        User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
+            'email' => [
+                'required', 'string', 'email', 'max:255',
+                function ($attribute, $value, $fail) {
+                    $emailHash = hash('sha256', $value);
+                    if (User::where('email_hash', $emailHash)->exists()) {
+                        $fail('The email has already been taken.');
+                    }
+                },
+            ],
+            'password' => 'required|min:8|confirmed',
+            'role' => 'required|integer|in:1,2' // 1 = organizer, 2 = attendee
         ]);
+        
+        // Encrypt email and name before saving to database
+        $data = $request->all();
+        $user = User::create($data);
 
-        // --
-		// Redirect to login form with success message
-        return redirect()->route('login-form')->with('success', Lang::get('messages.register_success'));
+        if($user) {
+            // --
+            // Redirect to events page with success message
+            return redirect()->route('events.index')->with('success', \Lang::get('messages.user_login_success'));
+        } else {
+            return redirect()->back()->withInput()->with('error', 'Registration failed.');
+        }
     }
 
     /**
@@ -88,41 +74,16 @@ class AuthController extends Controller
      */
     public function login(Request $request)
     {
-        $input = $request->all();
-
-        // --
-		// Define validation rules
-        $rules = [
-            'email' => 'required|email',
-            'password' => 'required',
-        ];
+        $credentials = $request->only('email', 'password');
         
-        // --
-		// Define custom validation messages
-        $messages = [
-            'email.required' => Lang::get('validations.email_required'),
-            'email.email' => Lang::get('validations.email_email'),
-            'password.required' => Lang::get('validations.password_required')
-        ];
+        $user = User::where('email_hash', hash('sha256', $credentials['email']))->first();
 
-        // --
-		// Validate the request
-        $validator = Validator::make($input, $rules, $messages);
-        if ($validator->fails()) {
-            return redirect()->back()
-                ->withErrors($validator)
-                ->withInput();
+        if ($user && $user->email === $credentials['email'] && \Auth::attempt($credentials)) {
+            \Cache::forget('events_list');
+            return redirect()->route('homepage')->with('success', \Lang::get('messages.user_login_success'));
+        } else {
+            return redirect()->back()->withInput()->with('error', 'Invalid credentials');
         }
-
-        // --
-		// Attempt to log the user in
-        if (Auth::attempt($request->only('email', 'password'))) {
-            return redirect()->route('urls.index')->with('success', Lang::get('messages.user_login_success'));
-        }
-
-        // --
-		// If login fails, redirect back with error message
-        return back()->with('error', 'Invalid credentials.');
     }
 
     /**
@@ -132,7 +93,8 @@ class AuthController extends Controller
      * @return \Illuminate\Http\RedirectResponse
      */
     public function logout(Request $request) {
-        Auth::logout();
-        return redirect()->route('login-form')->with('success', Lang::get('messages.logout'));
+        \Auth::logout();
+        
+        return redirect()->route('login-form')->with('success', \Lang::get('messages.logout'));
     }
 }

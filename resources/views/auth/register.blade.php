@@ -48,6 +48,15 @@
 											</div>
 											<div id="confirm_password_error" class="text-danger">@error('confirm_password'){{ $message }}@enderror</div>
 										</div>
+                                        <div class="form-group">
+											<label for="name">{{ __('label.role') }}</label>
+                                            <select class="form-control" id="role" name="role">
+                                                <option value="">{{ __('placeholder.role') }}</option>
+                                                <option value="1">Organizer</option>
+                                                <option value="2">Attendee</option>
+                                            </select>
+											<div id="role_error" class="text-danger">@error('role'){{ $message }}@enderror</div>
+										</div>
 										<button class="btn btn-primary btn-block" type="submit">{{ __('label.create_account') }}</button>
 									</form>
 				
@@ -83,6 +92,9 @@
 		},
         confirm_password: {
 			equalTo: <?php echo json_encode(trans('validations.login_form.confirm_password.equalTo')) ; ?>
+		},
+        role: {
+			equalTo: <?php echo json_encode(trans('validations.login_form.role.required')) ; ?>
 		}
 	};
 
@@ -104,7 +116,10 @@
                 },
                 confirm_password: {
                 	equalTo: "#password"
-            	}
+            	},
+                role: {
+                    required: true
+                }
             },
             messages: {
                 name: {
@@ -122,7 +137,10 @@
                 },
                 confirm_password: {
                 	equalTo: translations.confirm_password.equalTo
-        		}
+        		},
+                role: {
+                    required: "-- Please select a role --"
+                }
             },
             errorPlacement: function(error, element) {
                 var name = element.attr('name');

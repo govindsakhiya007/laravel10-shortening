@@ -33,5 +33,6 @@ return [
 
     'front_login' => 'Welcome back!',
 
-    'dont_have_account' => "Don't have an account?"
+    'dont_have_account' => "Don't have an account?",
+	'role' => 'Role'
 ];

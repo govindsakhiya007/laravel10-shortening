@@ -6,8 +6,8 @@
 		// Login Form
 		'login_form' => [
 			'name' => [
-				'required' => "Please enter the name",
-				'minlength' => "Your display name must be at least 8 characters long",
+				'required' => "Please enter the name.",
+				'minlength' => "Your display name must be at least 8 characters long.",
 				'maxlength' => "Your display name must not exceed 255 characters."
 			],
 			'email' => [
@@ -19,7 +19,10 @@
 				'minlength' => 'Your password must be at least 8 characters long.'
 			],
 			'confirm_password' => [
-				'equalTo' => "The confirm password must match the password field",
+				'equalTo' => "The confirm password must match the password field.",
+			],
+			'role' => [
+				'required' => "Please select a role.",
 			]
 		]
 	];
